@@ -4,6 +4,7 @@ import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Button } from '@/shadcn/button';
 import { cn } from '@/shared/utils';
 import { DoorOpenIcon, MenuIcon, XIcon } from 'lucide-react';
+import { useIsMobile } from '../hooks/use-mobile';
 
 const navLinks = [
 	{ label: 'Home', to: '/' },
@@ -17,6 +18,7 @@ export function FloatingNavbar() {
 	const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 	const location = useLocation();
 	const { scrollY } = useScroll();
+	const isMobile = useIsMobile();
 
 	useMotionValueEvent(scrollY, 'change', (latest) => {
 		setIsScrolled(latest > 50);
@@ -26,7 +28,7 @@ export function FloatingNavbar() {
 		<>
 			<motion.nav
 				initial={{ width: '100%' }}
-				animate={{ width: isScrolled ? '60%' : '100%' }}
+				animate={{ width: isScrolled ? (isMobile ? '90%' : '60%') : '100%' }}
 				exit={{ width: '100%' }}
 				transition={{ duration: 0.2, ease: 'easeOut' }}
 				className={cn(
