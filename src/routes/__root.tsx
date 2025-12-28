@@ -1,55 +1,89 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
+import * as React from 'react';
+import {
+	HeadContent,
+	Scripts,
+	createRootRoute,
+	Outlet,
+	ScrollRestoration,
+} from '@tanstack/react-router';
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { getQueryClient } from '@/shared/lib/query-client';
+import { AuthProvider } from '@/features/auth/hooks/use-auth';
 
-import appCss from '../styles.css?url'
+import appCss from '@/shared/styles/globals.css?url';
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'TanStack Start Starter',
-      },
-    ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-    ],
-  }),
+	head: () => ({
+		meta: [
+			{
+				charSet: 'utf-8',
+			},
+			{
+				name: 'viewport',
+				content: 'width=device-width, initial-scale=1',
+			},
+			{
+				title: 'Go Reserve - FILKOM UB Room Reservation',
+			},
+			{
+				name: 'description',
+				content:
+					'Room reservation system for Faculty of Computer Science, Universitas Brawijaya',
+			},
+		],
+		links: [
+			{
+				rel: 'stylesheet',
+				href: appCss,
+			},
+		],
+	}),
 
-  shellComponent: RootDocument,
-})
+	component: RootComponent,
+	shellComponent: RootDocument,
+});
+
+function RootComponent() {
+	const queryClient = getQueryClient();
+	const [direction, setDirection] = React.useState<'forward' | 'back' | null>(
+		null,
+	);
+
+	return (
+		<QueryClientProvider client={queryClient}>
+			<AuthProvider>
+				<Outlet />
+			</AuthProvider>
+		</QueryClientProvider>
+	);
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
-        <Scripts />
-      </body>
-    </html>
-  )
+	return (
+		<html lang="en">
+			<head>
+				<HeadContent />
+			</head>
+			<body className="min-h-screen bg-background antialiased">
+				{children}
+				<ScrollRestoration />
+				{process.env.NODE_ENV === 'development' && (
+					<TanStackDevtools
+						config={{
+							position: 'bottom-right',
+						}}
+						plugins={[
+							{
+								name: 'Tanstack Router',
+								render: <TanStackRouterDevtoolsPanel />,
+							},
+						]}
+					/>
+				)}
+				<Scripts />
+			</body>
+		</html>
+	);
 }
