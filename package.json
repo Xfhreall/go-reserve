@@ -13,7 +13,8 @@
 		"prepare": "husky",
 		"db:seed": "bun run prisma/seed.ts",
 		"db:push": "bunx prisma db push",
-		"db:generate": "bunx prisma generate"
+		"db:generate": "bunx prisma generate",
+		"postinstall": "prisma generate"
 	},
 	"prisma": {
 		"seed": "bun run prisma/seed.ts"
