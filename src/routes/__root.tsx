@@ -45,15 +45,14 @@ export const Route = createRootRoute({
 	shellComponent: RootDocument,
 });
 
+import { SmoothScroll } from '@/shared/components/smooth-scroll';
+
 function RootComponent() {
 	const queryClient = getQueryClient();
-	const [direction, setDirection] = React.useState<'forward' | 'back' | null>(
-		null,
-	);
-
 	return (
 		<QueryClientProvider client={queryClient}>
 			<AuthProvider>
+				<SmoothScroll />
 				<Outlet />
 			</AuthProvider>
 		</QueryClientProvider>

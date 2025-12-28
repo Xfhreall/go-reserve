@@ -2,7 +2,7 @@ import { createSchema, createYoga } from 'graphql-yoga';
 import { prisma } from '@/shared/lib/prisma';
 import { hash, compare } from 'bcryptjs';
 
-const typeDefs = /* GraphQL */ `
+const typeDefs = `
   enum Role {
     ADMIN
     MAHASISWA
