@@ -94,7 +94,7 @@ export function StudentDashboardPage({
 			</div>
 
 			<div className="grid gap-6 lg:grid-cols-2">
-				<Card>
+				<Card className="h-max">
 					<CardHeader>
 						<CardTitle>Quick Actions</CardTitle>
 						<CardDescription>

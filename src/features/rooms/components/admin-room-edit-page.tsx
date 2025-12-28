@@ -22,22 +22,15 @@ import {
 import { Badge } from '@/shadcn/badge';
 import { ArrowLeftIcon, PlusIcon, XIcon, Loader2Icon } from 'lucide-react';
 import { useRoomForm } from '../hooks/use-room-form';
-
-const mockRoom = {
-	id: '1',
-	name: 'Lab Komputer 1',
-	capacity: 40,
-	location: 'Gedung F, Lantai 1',
-	description: 'Laboratory with 40 computers for programming classes',
-	facilities: ['Computer', 'Projector', 'AC', 'WiFi'],
-	status: 'AVAILABLE',
-};
+import { updateRoomFn } from '../api/rooms.api';
+import type { Room, RoomStatus } from '@prisma/client';
+import { toast } from 'sonner';
 
 interface AdminRoomEditPageProps {
-	roomId: string;
+	room: Room;
 }
 
-export function AdminRoomEditPage({ roomId }: AdminRoomEditPageProps) {
+export function AdminRoomEditPage({ room }: AdminRoomEditPageProps) {
 	const navigate = useNavigate();
 	const {
 		isLoading,
@@ -47,7 +40,7 @@ export function AdminRoomEditPage({ roomId }: AdminRoomEditPageProps) {
 		setNewFacility,
 		addFacility,
 		removeFacility,
-	} = useRoomForm(mockRoom.facilities);
+	} = useRoomForm(room.facilities);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -56,21 +49,24 @@ export function AdminRoomEditPage({ roomId }: AdminRoomEditPageProps) {
 		const formData = new FormData(e.currentTarget);
 
 		const data = {
-			id: roomId,
 			name: formData.get('name') as string,
 			capacity: parseInt(formData.get('capacity') as string, 10),
 			location: formData.get('location') as string,
 			description: formData.get('description') as string,
-			status: formData.get('status') as string,
+			status: formData.get('status') as RoomStatus,
 			facilities,
 		};
 
-		console.log('Updating room:', data);
-
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-
-		setIsLoading(false);
-		navigate({ to: '/admin/rooms' });
+		try {
+			await updateRoomFn({ data: { id: room.id, data } });
+			toast.success('Room updated successfully');
+			navigate({ to: '/admin/rooms' });
+		} catch (error) {
+			console.error('Failed to update room:', error);
+			toast.error('Failed to update room');
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -89,7 +85,7 @@ export function AdminRoomEditPage({ roomId }: AdminRoomEditPageProps) {
 				<div>
 					<h1 className="text-3xl font-bold tracking-tight">Edit Room</h1>
 					<p className="text-muted-foreground">
-						Update room information • ID: {roomId}
+						Update room information • Room: {room.name}
 					</p>
 				</div>
 			</motion.div>
@@ -113,7 +109,7 @@ export function AdminRoomEditPage({ roomId }: AdminRoomEditPageProps) {
 										<Input
 											id="name"
 											name="name"
-											defaultValue={mockRoom.name}
+											defaultValue={room.name}
 											placeholder="e.g., Lab Komputer 1"
 											required
 										/>
@@ -126,7 +122,7 @@ export function AdminRoomEditPage({ roomId }: AdminRoomEditPageProps) {
 											name="capacity"
 											type="number"
 											min="1"
-											defaultValue={mockRoom.capacity}
+											defaultValue={room.capacity}
 											placeholder="e.g., 40"
 											required
 										/>
@@ -139,14 +135,14 @@ export function AdminRoomEditPage({ roomId }: AdminRoomEditPageProps) {
 										<Input
 											id="location"
 											name="location"
-											defaultValue={mockRoom.location}
+											defaultValue={room.location || ''}
 											placeholder="e.g., Gedung F, Lantai 1"
 										/>
 									</Field>
 
 									<Field>
 										<FieldLabel htmlFor="status">Status *</FieldLabel>
-										<Select name="status" defaultValue={mockRoom.status}>
+										<Select name="status" defaultValue={room.status}>
 											<SelectTrigger id="status">
 												<SelectValue placeholder="Select status" />
 											</SelectTrigger>
@@ -164,7 +160,7 @@ export function AdminRoomEditPage({ roomId }: AdminRoomEditPageProps) {
 									<Textarea
 										id="description"
 										name="description"
-										defaultValue={mockRoom.description}
+										defaultValue={room.description || ''}
 										placeholder="Describe the room and its features..."
 										rows={3}
 									/>

@@ -81,7 +81,7 @@ export function AdminUsersPage({
 				className="grid gap-4 sm:grid-cols-3"
 			>
 				<Card>
-					<CardContent className="pt-6">
+					<CardContent>
 						<div className="flex items-center gap-3">
 							<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
 								<UsersIcon className="h-5 w-5 text-primary" />
@@ -94,7 +94,7 @@ export function AdminUsersPage({
 					</CardContent>
 				</Card>
 				<Card>
-					<CardContent className="pt-6">
+					<CardContent>
 						<div className="flex items-center gap-3">
 							<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-500/20">
 								<ShieldIcon className="h-5 w-5 text-red-700" />
@@ -107,7 +107,7 @@ export function AdminUsersPage({
 					</CardContent>
 				</Card>
 				<Card>
-					<CardContent className="pt-6">
+					<CardContent>
 						<div className="flex items-center gap-3">
 							<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
 								<GraduationCapIcon className="h-5 w-5 text-blue-700" />
@@ -127,7 +127,7 @@ export function AdminUsersPage({
 				transition={{ duration: 0.5, delay: 0.15 }}
 			>
 				<Card>
-					<CardContent className="pt-6">
+					<CardContent>
 						<div className="flex flex-col gap-4 sm:flex-row">
 							<div className="relative flex-1">
 								<SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

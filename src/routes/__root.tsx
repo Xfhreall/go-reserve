@@ -47,12 +47,15 @@ export const Route = createRootRoute({
 
 import { SmoothScroll } from '@/shared/components/smooth-scroll';
 
+import { Toaster } from '@/shared/components/ui/shadcn/sonner';
+
 function RootComponent() {
 	const queryClient = getQueryClient();
 	return (
 		<QueryClientProvider client={queryClient}>
 			<AuthProvider>
 				<SmoothScroll />
+				<Toaster richColors={true} />
 				<Outlet />
 			</AuthProvider>
 		</QueryClientProvider>

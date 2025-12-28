@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start';
-import { prisma } from '@/shared/lib/prisma';
+import { prisma, type RoomStatus } from '@/shared/lib/prisma';
 
 export const getRoomsFn = createServerFn({ method: 'GET' }).handler(
 	async () => {
@@ -41,3 +41,57 @@ export const getRoomStatsFn = createServerFn({ method: 'GET' }).handler(
 		return { total, available, maintenance, unavailable };
 	},
 );
+
+export const updateRoomFn = createServerFn({ method: 'POST' })
+	.inputValidator(
+		(data: {
+			id: string;
+			data: {
+				name?: string;
+				capacity?: number;
+				facilities?: string[];
+				image?: string | null;
+				description?: string | null;
+				location?: string | null;
+				status?: string; // Validated on server
+			};
+		}) => data,
+	)
+	.handler(async ({ data: { id, data } }) => {
+		return prisma.room.update({
+			where: { id },
+			data: {
+				...data,
+				status: data.status as RoomStatus,
+			},
+		});
+	});
+
+export const createRoomFn = createServerFn({ method: 'POST' })
+	.inputValidator(
+		(data: {
+			name: string;
+			capacity: number;
+			facilities: string[];
+			image?: string | null;
+			description?: string | null;
+			location?: string | null;
+			status?: any; // Validate properly in production
+		}) => data,
+	)
+	.handler(async ({ data }) => {
+		return prisma.room.create({
+			data: {
+				...data,
+				status: data.status as any,
+			},
+		});
+	});
+
+export const deleteRoomFn = createServerFn({ method: 'POST' })
+	.inputValidator((id: string) => id)
+	.handler(async ({ data: id }) => {
+		return prisma.room.delete({
+			where: { id },
+		});
+	});

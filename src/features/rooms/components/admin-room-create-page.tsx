@@ -23,6 +23,9 @@ import { Badge } from '@/shadcn/badge';
 import { ArrowLeftIcon, PlusIcon, XIcon, Loader2Icon } from 'lucide-react';
 import { useRoomForm } from '../hooks/use-room-form';
 
+import { createRoomFn } from '../api/rooms.api';
+import { toast } from 'sonner';
+
 export function AdminRoomCreatePage() {
 	const navigate = useNavigate();
 	const {
@@ -46,16 +49,20 @@ export function AdminRoomCreatePage() {
 			capacity: parseInt(formData.get('capacity') as string, 10),
 			location: formData.get('location') as string,
 			description: formData.get('description') as string,
-			status: formData.get('status') as string,
+			status: formData.get('status') as any, // Cast locally
 			facilities,
 		};
 
-		console.log('Creating room:', data);
-
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-
-		setIsLoading(false);
-		navigate({ to: '/admin/rooms' });
+		try {
+			await createRoomFn({ data });
+			toast.success('Room created successfully');
+			navigate({ to: '/admin/rooms' });
+		} catch (error) {
+			console.error('Failed to create room:', error);
+			toast.error('Failed to create room');
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (

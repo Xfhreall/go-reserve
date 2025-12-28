@@ -8,8 +8,6 @@ import {
 	CardTitle,
 } from '@/shadcn/card';
 import { Field, FieldLabel } from '@/shadcn/field';
-// import { loginFn } from '@/features/auth/api/auth.server'; // Moved to hook
-// import { useAuth } from '@/features/auth/hooks/use-auth'; // Moved to hook
 import { useLoginForm } from '@/features/auth/hooks/use-login-form';
 import { MailIcon, LockIcon, Loader2Icon } from 'lucide-react';
 
@@ -98,6 +96,9 @@ export function LoginForm() {
 					<p>Demo credentials:</p>
 					<p className="mt-1 font-mono text-xs">
 						admin@filkom.ub.ac.id / admin123
+					</p>
+					<p className="mt-1 font-mono text-xs">
+						budi.santoso@student.ub.ac.id / student123
 					</p>
 				</div>
 			</CardContent>
